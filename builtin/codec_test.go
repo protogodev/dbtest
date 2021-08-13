@@ -9,23 +9,25 @@ import (
 )
 
 func TestDefaultCodec_Encode(t *testing.T) {
-	type Data struct {
+	type Datum struct {
 		Bool bool
 		Null *int
 	}
 	type in struct {
-		Int  int
-		Str  string
-		Data Data
-		Err  error `dbtest:"err"`
+		Int   int
+		Str   string
+		Datum Datum
+		Data  []Datum
+		Err   error `dbtest:"err"`
 	}
 
 	codec := &builtin.DefaultCodec{}
 	got, err := codec.Encode(in{
-		Int:  1,
-		Str:  "s",
-		Data: Data{Bool: true, Null: nil},
-		Err:  errors.New("oops"),
+		Int:   1,
+		Str:   "s",
+		Datum: Datum{Bool: true, Null: nil},
+		Data:  []Datum{{Bool: true, Null: nil}},
+		Err:   errors.New("oops"),
 	})
 	if err != nil {
 		t.Fatalf("Err: %v\n", err)
@@ -34,9 +36,15 @@ func TestDefaultCodec_Encode(t *testing.T) {
 	want := map[string]interface{}{
 		"Int": 1,
 		"Str": "s",
-		"Data": map[string]interface{}{
+		"Datum": map[string]interface{}{
 			"Bool": true,
 			"Null": (*int)(nil),
+		},
+		"Data": []interface{}{
+			map[string]interface{}{
+				"Bool": true,
+				"Null": (*int)(nil),
+			},
 		},
 		"err": "oops",
 	}

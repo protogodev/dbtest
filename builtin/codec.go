@@ -5,12 +5,18 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/fatih/structs"
 	"github.com/mitchellh/mapstructure"
 )
 
 var (
 	errorInterface = reflect.TypeOf((*error)(nil)).Elem()
 )
+
+func init() {
+	// Change the default tag name of structs.
+	structs.DefaultTagName = "dbtest"
+}
 
 type Codec interface {
 	Decode(in map[string]interface{}, out interface{}) (err error)
@@ -31,10 +37,11 @@ func (dc *DefaultCodec) Encode(in interface{}) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("non-struct is unsupported")
 	}
 
-	out := make(map[string]interface{})
+	/*out := make(map[string]interface{})
 	if err := decode(in, &out); err != nil {
 		return nil, err
-	}
+	}*/
+	out := structs.Map(in)
 
 	overwriteErr(inValue, out)
 	return out, nil
