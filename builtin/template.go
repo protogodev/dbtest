@@ -109,7 +109,7 @@ func Test{{.Name}}(t *testing.T) {
 			}
 
 			var gotOut out
-			{{joinParams $method.Returns "gotOut.>Name" ", "}} = instance.{{.Name}}({{joinParams $method.Params "in.>Name" ", "}})
+			{{fmtArgCSV $method.ReturnArgValueList "gotOut.>Name"}} = instance.{{.Name}}({{fmtArgCSV $method.CallArgList "in.>Name"}})
 
 			encodedOut, err := codec.Encode(gotOut)
 			if err != nil {

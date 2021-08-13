@@ -132,13 +132,20 @@ func generate(opts *Options, ifaceData *ifacetool.Data) (*generator.File, error)
 	return generator.Generate(template, data, generator.Options{
 		Funcs: map[string]interface{}{
 			"title": strings.Title,
-			"joinParams": func(params []*ifacetool.Param, format, sep string) string {
-				var results []string
+			"fmtArgCSV": func(csv string, format string) string {
+				if csv == "" {
+					return ""
+				}
 
-				for _, p := range params {
-					r := strings.NewReplacer("$Name", p.Name, ">Name", strings.Title(p.Name))
+				sep := ", "
+				args := strings.Split(csv, sep)
+
+				var results []string
+				for _, a := range args {
+					r := strings.NewReplacer("$Name", a, ">Name", strings.Title(a))
 					results = append(results, r.Replace(format))
 				}
+
 				return strings.Join(results, sep)
 			},
 			"interfaceMethod": func(name string) *ifacetool.Method {
