@@ -3,7 +3,6 @@ package builtin
 import (
 	"fmt"
 	"reflect"
-	"strings"
 	"time"
 
 	"github.com/RussellLuo/structs"
@@ -46,11 +45,9 @@ func (dc *DefaultCodec) Encode(in interface{}) (map[string]interface{}, error) {
 
 	s := structs.New(in)
 	s.TagName = "dbtest"
-	s.EncodeHook = dc.timeToStringHookFunc
-	out := s.Map()
+	s.EncodeHook = dc.errOrTimeToStringHookFunc
 
-	overwriteErr(inValue, out)
-	return out, nil
+	return s.Map(), nil
 }
 
 func (dc *DefaultCodec) stringToTimeHookFunc(from, to reflect.Value) (interface{}, error) {
@@ -74,7 +71,14 @@ func (dc *DefaultCodec) stringToTimeHookFunc(from, to reflect.Value) (interface{
 	return from.Interface(), nil
 }
 
-func (dc *DefaultCodec) timeToStringHookFunc(in interface{}) (interface{}, error) {
+func (dc *DefaultCodec) errOrTimeToStringHookFunc(typ reflect.Type, in interface{}) (interface{}, error) {
+	if typ.Implements(errorInterface) {
+		if in == nil {
+			return "", nil
+		}
+		return in.(error).Error(), nil
+	}
+
 	switch v := in.(type) {
 	case time.Time:
 		return v.Format(dc.TimeFormat), nil
@@ -85,44 +89,4 @@ func (dc *DefaultCodec) timeToStringHookFunc(in interface{}) (interface{}, error
 		return v.Format(dc.TimeFormat), nil
 	}
 	return in, nil
-}
-
-// overwriteEr reset the possible error field from an error to a string.
-func overwriteErr(in reflect.Value, out map[string]interface{}) {
-	typ := in.Type()
-
-	for i := 0; i < typ.NumField(); i++ {
-		field := typ.Field(i)
-		value := in.Field(i)
-
-		// NOTE: We assume that there is only one error at the top level.
-		if field.Type.Implements(errorInterface) {
-			name := getFieldName(field)
-			var msg string
-			if value.IsNil() {
-				msg = ""
-			} else {
-				msg = value.Interface().(error).Error()
-			}
-
-			out[name] = msg
-			return
-		}
-	}
-}
-
-func getFieldName(field reflect.StructField) string {
-	tag := field.Tag.Get("dbtest")
-	if tag == "-" {
-		return ""
-	}
-
-	parts := strings.Split(tag, ",")
-	name := parts[0]
-
-	if name == "" {
-		name = field.Name
-	}
-
-	return name
 }
