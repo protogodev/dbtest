@@ -28,11 +28,7 @@ func TestMain(m *testing.M) {
 
 	testee = t
 	instance = testee.Instance.(store.Store)
-
 	codec = testee.Codec
-	if codec == nil {
-		codec = &builtin.DefaultCodec{}
-	}
 
 	// os.Exit() does not respect deferred functions
 	code := m.Run()
@@ -44,7 +40,7 @@ func TestMain(m *testing.M) {
 func TestCreateUser(t *testing.T) {
 	f := builtin.NewFixture(t, testee.NewDB(), map[string]spec.Rows{
 		"user": {
-			{"age": 10, "birth": "2021-08-10", "name": "foo", "sex": "m"},
+			{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
 		},
 	})
 	f.SetUp()
@@ -68,27 +64,27 @@ func TestCreateUser(t *testing.T) {
 	}{
 		{
 			name:    "new user",
-			in:      map[string]interface{}{"user": map[interface{}]interface{}{"Age": 12, "Birth": "2021-08-12", "Name": "bar", "Sex": "f"}},
+			in:      map[string]interface{}{"user": map[interface{}]interface{}{"Age": 12, "Birth": "2021-08-12T00:00:00Z", "Name": "bar", "Sex": "f"}},
 			wantOut: map[string]interface{}{"err": ""},
 			wantData: []spec.DataAssertion{
 				{
 					Query: "SELECT name, sex, age, birth FROM user",
 					Result: spec.Rows{
-						{"age": 10, "birth": "2021-08-10", "name": "foo", "sex": "m"},
-						{"age": 12, "birth": "2021-08-12", "name": "bar", "sex": "f"},
+						{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
+						{"age": 12, "birth": "2021-08-12T00:00:00Z", "name": "bar", "sex": "f"},
 					},
 				},
 			},
 		},
 		{
 			name:    "duplicate user",
-			in:      map[string]interface{}{"user": map[interface{}]interface{}{"Age": 10, "Birth": "2021-08-10", "Name": "foo", "Sex": "m"}},
+			in:      map[string]interface{}{"user": map[interface{}]interface{}{"Age": 10, "Birth": "2021-08-10T00:00:00Z", "Name": "foo", "Sex": "m"}},
 			wantOut: map[string]interface{}{"err": "Error 1062: Duplicate entry 'foo' for key 'idx_name'"},
 			wantData: []spec.DataAssertion{
 				{
 					Query: "SELECT name, sex, age, birth FROM user",
 					Result: spec.Rows{
-						{"age": 10, "birth": "2021-08-10", "name": "foo", "sex": "m"},
+						{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
 					},
 				},
 			},
@@ -133,7 +129,7 @@ func TestCreateUser(t *testing.T) {
 func TestGetUser(t *testing.T) {
 	f := builtin.NewFixture(t, testee.NewDB(), map[string]spec.Rows{
 		"user": {
-			{"age": 10, "birth": "2021-08-10", "name": "foo", "sex": "m"},
+			{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
 		},
 	})
 	f.SetUp()
@@ -159,7 +155,7 @@ func TestGetUser(t *testing.T) {
 		{
 			name:     "ok",
 			in:       map[string]interface{}{"name": "foo"},
-			wantOut:  map[string]interface{}{"err": "", "user": map[interface{}]interface{}{"Age": 10, "Birth": "2021-08-10", "Name": "foo", "Sex": "m"}},
+			wantOut:  map[string]interface{}{"err": "", "user": map[interface{}]interface{}{"Age": 10, "Birth": "2021-08-10T00:00:00Z", "Name": "foo", "Sex": "m"}},
 			wantData: []spec.DataAssertion{},
 		},
 		{
@@ -208,7 +204,7 @@ func TestGetUser(t *testing.T) {
 func TestUpdateUser(t *testing.T) {
 	f := builtin.NewFixture(t, testee.NewDB(), map[string]spec.Rows{
 		"user": {
-			{"age": 10, "birth": "2021-08-10", "name": "foo", "sex": "m"},
+			{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
 		},
 	})
 	f.SetUp()
@@ -233,26 +229,26 @@ func TestUpdateUser(t *testing.T) {
 	}{
 		{
 			name:    "ok",
-			in:      map[string]interface{}{"name": "foo", "user": map[interface{}]interface{}{"Age": 11, "Birth": "2021-08-11", "Sex": "m"}},
+			in:      map[string]interface{}{"name": "foo", "user": map[interface{}]interface{}{"Age": 11, "Birth": "2021-08-11T00:00:00Z", "Sex": "m"}},
 			wantOut: map[string]interface{}{"err": ""},
 			wantData: []spec.DataAssertion{
 				{
 					Query: "SELECT name, sex, age, birth FROM user",
 					Result: spec.Rows{
-						{"age": 11, "birth": "2021-08-11", "name": "foo", "sex": "m"},
+						{"age": 11, "birth": "2021-08-11T00:00:00Z", "name": "foo", "sex": "m"},
 					},
 				},
 			},
 		},
 		{
 			name:    "not found",
-			in:      map[string]interface{}{"name": "bar", "user": map[interface{}]interface{}{"Age": 11, "Birth": "2021-08-11", "Sex": "m"}},
+			in:      map[string]interface{}{"name": "bar", "user": map[interface{}]interface{}{"Age": 11, "Birth": "2021-08-11T00:00:00Z", "Sex": "m"}},
 			wantOut: map[string]interface{}{"err": ""},
 			wantData: []spec.DataAssertion{
 				{
 					Query: "SELECT name, sex, age, birth FROM user",
 					Result: spec.Rows{
-						{"age": 10, "birth": "2021-08-10", "name": "foo", "sex": "m"},
+						{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
 					},
 				},
 			},
@@ -297,7 +293,7 @@ func TestUpdateUser(t *testing.T) {
 func TestDeleteUser(t *testing.T) {
 	f := builtin.NewFixture(t, testee.NewDB(), map[string]spec.Rows{
 		"user": {
-			{"age": 10, "birth": "2021-08-10", "name": "foo", "sex": "m"},
+			{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
 		},
 	})
 	f.SetUp()
@@ -338,7 +334,7 @@ func TestDeleteUser(t *testing.T) {
 				{
 					Query: "SELECT name, sex, age, birth FROM user",
 					Result: spec.Rows{
-						{"age": 10, "birth": "2021-08-10", "name": "foo", "sex": "m"},
+						{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
 					},
 				},
 			},

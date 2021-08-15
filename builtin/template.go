@@ -31,11 +31,7 @@ func TestMain(m *testing.M) {
 
 	testee = t
 	instance = testee.Instance.({{$.SrcPkgName}}.{{$.InterfaceName}})
-
 	codec = testee.Codec
-	if codec == nil {
-		codec = &builtin.DefaultCodec{}
-	}
 
 	// os.Exit() does not respect deferred functions
 	code := m.Run()

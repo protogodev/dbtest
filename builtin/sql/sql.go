@@ -5,16 +5,18 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/RussellLuo/dbtest/spec"
 )
 
 type DB struct {
-	db *sql.DB
+	db         *sql.DB
+	timeFormat string
 }
 
-func New(db *sql.DB) *DB {
-	return &DB{db: db}
+func New(db *sql.DB, timeFormat string) *DB {
+	return &DB{db: db, timeFormat: timeFormat}
 }
 
 func (db *DB) Close() error {
@@ -95,7 +97,7 @@ func (db *DB) Select(query string) (result spec.Rows, err error) {
 		m := make(map[string]interface{})
 		for i, ct := range colTypes {
 			ptr := columnPointers[i].(*interface{})
-			val, err := underlyingValue(ct.DatabaseTypeName(), *ptr)
+			val, err := db.underlyingValue(ct.DatabaseTypeName(), *ptr)
 			if err != nil {
 				return nil, err
 			}
@@ -113,7 +115,19 @@ func (db *DB) Select(query string) (result spec.Rows, err error) {
 	return result, nil
 }
 
-func underlyingValue(typeName string, value interface{}) (interface{}, error) {
+func (db *DB) underlyingValue(typeName string, value interface{}) (interface{}, error) {
+	switch v := value.(type) {
+	// Corresponding database type name: "DATE", "DATETIME".
+	// Convert DATE or DATETIME values to strings for testing purpose.
+	case time.Time:
+		return v.Format(db.timeFormat), nil
+	case *time.Time:
+		if v == nil {
+			return "", nil
+		}
+		return v.Format(db.timeFormat), nil
+	}
+
 	v := value.([]byte)
 	s := string(v)
 
@@ -138,9 +152,6 @@ func underlyingValue(typeName string, value interface{}) (interface{}, error) {
 			return nil, err
 		}
 		return b, nil
-	case "DATE", "DATETIME":
-		// Treat DATE or DATETIME values as strings for testing purpose.
-		return s, nil
 	default:
 		return nil, fmt.Errorf("unsupported database type: %s", typeName)
 	}

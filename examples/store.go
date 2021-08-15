@@ -2,7 +2,8 @@ package store
 
 import (
 	"database/sql"
-	"fmt"
+	"time"
+
 	"github.com/go-sql-driver/mysql"
 
 	"github.com/RussellLuo/dbtest/builtin"
@@ -16,7 +17,7 @@ type User struct {
 	Name  string
 	Sex   string
 	Age   int
-	Birth string
+	Birth time.Time
 }
 
 type Store interface {
@@ -34,6 +35,13 @@ func NewDBStore(dsn string) (*DBStore, error) {
 	cfg, err := mysql.ParseDSN(dsn)
 	if err != nil {
 		return nil, err
+	}
+
+	// Always parse time values to time.Time and use UTC.
+	cfg.ParseTime = true
+	cfg.Loc = time.UTC
+	if cfg.Params == nil {
+		cfg.Params = map[string]string{"time_zone": "'+00:00'"}
 	}
 
 	db, err := sql.Open("mysql", cfg.FormatDSN())
@@ -78,7 +86,6 @@ func (s *DBStore) GetUser(name string) (*User, error) {
 	for rows.Next() {
 		user = new(User)
 		if err := rows.Scan(&user.ID, &user.Name, &user.Sex, &user.Age, &user.Birth); err != nil {
-			fmt.Println("1")
 			return nil, err
 		}
 	}
@@ -113,11 +120,14 @@ func NewTestee(dsn string) (*builtin.Testee, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	timeFormat := time.RFC3339
 	return &builtin.Testee{
 		Instance: store,
 		Close:    store.db.Close,
 		NewDB: func() builtin.DB {
-			return sqldb.New(store.db)
+			return sqldb.New(store.db, timeFormat)
 		},
+		Codec: &builtin.DefaultCodec{TimeFormat: timeFormat},
 	}, nil
 }

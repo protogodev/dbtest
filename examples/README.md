@@ -15,7 +15,7 @@ This example illustrates how to apply declarative testing for a typical database
 
 2. Implement the testee factory
 
-   See [NewTestee()](store.go#L110-L123).
+   See [NewTestee()](store.go#L117-L133).
 
 3. Write the test specification
 
