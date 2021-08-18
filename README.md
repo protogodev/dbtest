@@ -3,6 +3,12 @@
 Database testing made easy in Go.
 
 
+## Features
+
+- Define the test specification in a YAML based DSL.
+- Use the same [test fixture][1] for all subtests of the same method.
+
+
 ## Installation
 
 ```bash
@@ -35,7 +41,7 @@ See [examples](examples).
 
 ## Documentation
 
-Check out the [Godoc][1].
+Check out the [Godoc][2].
 
 
 ## License
@@ -43,4 +49,5 @@ Check out the [Godoc][1].
 [MIT](LICENSE)
 
 
-[1]: https://pkg.go.dev/github.com/RussellLuo/dbtest
+[1]: https://en.wikipedia.org/wiki/Test_fixture#Software
+[2]: https://pkg.go.dev/github.com/RussellLuo/dbtest
