@@ -16,7 +16,6 @@ import (
 var (
 	testee   *builtin.Testee
 	instance store.Store
-	codec    builtin.Codec
 )
 
 func TestMain(m *testing.M) {
@@ -26,19 +25,22 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	testee = t
+	testee = t.Complete()
+	if err := testee.Validate(); err != nil {
+		fmt.Printf("err: %v\n", err)
+		os.Exit(1)
+	}
 	instance = testee.Instance.(store.Store)
-	codec = testee.Codec
 
 	// os.Exit() does not respect deferred functions
 	code := m.Run()
 
-	testee.Close()
+	_ = testee.DB.Close()
 	os.Exit(code)
 }
 
 func TestCreateUser(t *testing.T) {
-	f := builtin.NewFixture(t, testee.NewDB(), map[string]spec.Rows{
+	f := builtin.NewFixture(t, testee.DB, map[string]spec.Rows{
 		"user": {
 			{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
 		},
@@ -94,14 +96,14 @@ func TestCreateUser(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var in in
-			if err := codec.Decode(tt.in, &in); err != nil {
+			if err := testee.Codec.Decode(tt.in, &in); err != nil {
 				t.Fatalf("err when decoding In: %v", err)
 			}
 
 			var gotOut out
 			gotOut.Err = instance.CreateUser(in.User)
 
-			encodedOut, err := codec.Encode(gotOut)
+			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
 				t.Fatalf("err when encoding Out: %v", err)
 			}
@@ -127,7 +129,7 @@ func TestCreateUser(t *testing.T) {
 }
 
 func TestGetUser(t *testing.T) {
-	f := builtin.NewFixture(t, testee.NewDB(), map[string]spec.Rows{
+	f := builtin.NewFixture(t, testee.DB, map[string]spec.Rows{
 		"user": {
 			{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
 		},
@@ -169,14 +171,14 @@ func TestGetUser(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var in in
-			if err := codec.Decode(tt.in, &in); err != nil {
+			if err := testee.Codec.Decode(tt.in, &in); err != nil {
 				t.Fatalf("err when decoding In: %v", err)
 			}
 
 			var gotOut out
 			gotOut.User, gotOut.Err = instance.GetUser(in.Name)
 
-			encodedOut, err := codec.Encode(gotOut)
+			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
 				t.Fatalf("err when encoding Out: %v", err)
 			}
@@ -202,7 +204,7 @@ func TestGetUser(t *testing.T) {
 }
 
 func TestUpdateUser(t *testing.T) {
-	f := builtin.NewFixture(t, testee.NewDB(), map[string]spec.Rows{
+	f := builtin.NewFixture(t, testee.DB, map[string]spec.Rows{
 		"user": {
 			{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
 		},
@@ -258,14 +260,14 @@ func TestUpdateUser(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var in in
-			if err := codec.Decode(tt.in, &in); err != nil {
+			if err := testee.Codec.Decode(tt.in, &in); err != nil {
 				t.Fatalf("err when decoding In: %v", err)
 			}
 
 			var gotOut out
 			gotOut.Err = instance.UpdateUser(in.Name, in.User)
 
-			encodedOut, err := codec.Encode(gotOut)
+			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
 				t.Fatalf("err when encoding Out: %v", err)
 			}
@@ -291,7 +293,7 @@ func TestUpdateUser(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-	f := builtin.NewFixture(t, testee.NewDB(), map[string]spec.Rows{
+	f := builtin.NewFixture(t, testee.DB, map[string]spec.Rows{
 		"user": {
 			{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"},
 		},
@@ -344,14 +346,14 @@ func TestDeleteUser(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var in in
-			if err := codec.Decode(tt.in, &in); err != nil {
+			if err := testee.Codec.Decode(tt.in, &in); err != nil {
 				t.Fatalf("err when decoding In: %v", err)
 			}
 
 			var gotOut out
 			gotOut.Err = instance.DeleteUser(in.Name)
 
-			encodedOut, err := codec.Encode(gotOut)
+			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
 				t.Fatalf("err when encoding Out: %v", err)
 			}

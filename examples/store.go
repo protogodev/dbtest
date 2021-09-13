@@ -121,13 +121,8 @@ func NewTestee(dsn string) (*builtin.Testee, error) {
 		return nil, err
 	}
 
-	timeFormat := time.RFC3339
 	return &builtin.Testee{
 		Instance: store,
-		Close:    store.db.Close,
-		NewDB: func() builtin.DB {
-			return sqldb.New(store.db, timeFormat)
-		},
-		Codec: &builtin.DefaultCodec{TimeFormat: timeFormat},
+		DB:       sqldb.New(store.db),
 	}, nil
 }

@@ -10,6 +10,7 @@ type DB interface {
 	Insert(data map[string]spec.Rows) error
 	Delete(keys ...string) error
 	Select(query string) (spec.Rows, error)
+	Close() error
 }
 
 type Fixture struct {

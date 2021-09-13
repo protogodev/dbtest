@@ -8,6 +8,7 @@ package {{$.SrcPkgName}}_test
 import (
 	"fmt"
 	"testing"
+	"time"
 	"github.com/RussellLuo/dbtest/builtin"
 	"github.com/RussellLuo/dbtest/spec"
 
@@ -19,7 +20,6 @@ import (
 var (
 	testee   *builtin.Testee
 	instance {{$.SrcPkgName}}.{{$.InterfaceName}}
-	codec    builtin.Codec
 )
 
 func TestMain(m *testing.M) {
@@ -29,14 +29,17 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	testee = t
+	testee = t.Complete()
+	if err := testee.Validate(); err != nil {
+		fmt.Printf("err: %v\n", err)
+		os.Exit(1)
+	}
 	instance = testee.Instance.({{$.SrcPkgName}}.{{$.InterfaceName}})
-	codec = testee.Codec
 
 	// os.Exit() does not respect deferred functions
 	code := m.Run()
 
-	testee.Close()
+	_ = testee.DB.Close()
 	os.Exit(code)
 }
 
@@ -44,7 +47,7 @@ func TestMain(m *testing.M) {
 {{- $method := interfaceMethod .Name}}
 
 func Test{{.Name}}(t *testing.T) {
-	f := builtin.NewFixture(t, testee.NewDB(), map[string]spec.Rows{
+	f := builtin.NewFixture(t, testee.DB, map[string]spec.Rows{
 		{{- range $tableName, $rows := .Fixture }}
 		"{{$tableName}}": {
 			{{- range $rows}}
@@ -100,14 +103,14 @@ func Test{{.Name}}(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var in in
-			if err := codec.Decode(tt.in, &in); err != nil {
+			if err := testee.Codec.Decode(tt.in, &in); err != nil {
 				t.Fatalf("err when decoding In: %v", err)
 			}
 
 			var gotOut out
 			{{fmtArgCSV $method.ReturnArgValueList "gotOut.>Name"}} = instance.{{.Name}}({{fmtArgCSV $method.CallArgList "in.>Name"}})
 
-			encodedOut, err := codec.Encode(gotOut)
+			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
 				t.Fatalf("err when encoding Out: %v", err)
 			}

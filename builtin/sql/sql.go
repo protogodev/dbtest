@@ -15,12 +15,13 @@ type DB struct {
 	timeFormat string
 }
 
-func New(db *sql.DB, timeFormat string) *DB {
-	return &DB{db: db, timeFormat: timeFormat}
+func New(db *sql.DB) *DB {
+	return &DB{db: db, timeFormat: time.RFC3339}
 }
 
-func (db *DB) Close() error {
-	return db.db.Close()
+func (db *DB) TimeFormat(format string) *DB {
+	db.timeFormat = format
+	return db
 }
 
 func (db *DB) Insert(data map[string]spec.Rows) error {
@@ -113,6 +114,10 @@ func (db *DB) Select(query string) (result spec.Rows, err error) {
 	}
 
 	return result, nil
+}
+
+func (db *DB) Close() error {
+	return db.db.Close()
 }
 
 func (db *DB) underlyingValue(typeName string, value interface{}) (interface{}, error) {
