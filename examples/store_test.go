@@ -81,7 +81,7 @@ func TestCreateUser(t *testing.T) {
 		{
 			name:    "duplicate user",
 			in:      map[string]interface{}{"user": map[interface{}]interface{}{"Age": 10, "Birth": "2021-08-10T00:00:00Z", "Name": "foo", "Sex": "m"}},
-			wantOut: map[string]interface{}{"err": "Error 1062: Duplicate entry 'foo' for key 'idx_name'"},
+			wantOut: map[string]interface{}{"err": "Error 1062: Duplicate entry 'foo' for key 'user.idx_name'"},
 			wantData: []spec.DataAssertion{
 				{
 					Query: "SELECT name, sex, age, birth FROM user",

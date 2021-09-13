@@ -33,13 +33,14 @@ func (db *DB) Insert(data map[string]spec.Rows) error {
 			var names []string
 			var values []interface{}
 			for k, v := range row {
-				names = append(names, k)
+				names = append(names, backQuote(k))
+				v = db.stringToTime(v)
 				values = append(values, v)
 			}
 
 			query := fmt.Sprintf(
 				"INSERT INTO %s (%s) VALUES (%s)",
-				tableName,
+				backQuote(tableName),
 				strings.Join(names, ", "),
 				placeholders,
 			)
@@ -120,6 +121,22 @@ func (db *DB) Close() error {
 	return db.db.Close()
 }
 
+func (db *DB) stringToTime(value interface{}) interface{} {
+	v, ok := value.(string)
+	if !ok {
+		// Non-string
+		return value
+	}
+
+	t, err := time.Parse(db.timeFormat, v)
+	if err != nil {
+		// This is not a time string or the time format does not match.
+		return value
+	}
+
+	return t
+}
+
 func (db *DB) underlyingValue(typeName string, value interface{}) (interface{}, error) {
 	switch v := value.(type) {
 	// Corresponding database type name: "DATE", "DATETIME".
@@ -160,4 +177,8 @@ func (db *DB) underlyingValue(typeName string, value interface{}) (interface{}, 
 	default:
 		return nil, fmt.Errorf("unsupported database type: %s", typeName)
 	}
+}
+
+func backQuote(s string) string {
+	return "`" + s + "`"
 }
