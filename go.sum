@@ -6,8 +6,8 @@ github.com/RussellLuo/appx v0.0.0-20210610081121-2d2842cc1993/go.mod h1:BYiSO63u
 github.com/RussellLuo/kok v0.3.2-0.20210729094604-1218a93f4b17 h1:2WRqniK55CUBMH5j1/erjw0BQ4UQ8xSY9LlASjdlf+w=
 github.com/RussellLuo/kok v0.3.2-0.20210729094604-1218a93f4b17/go.mod h1:OQL4ZbGhuwCSOyqLcmI/XDgqRWnigbuVNFbq9hailTo=
 github.com/RussellLuo/micron v0.0.0-20200517141348-ec849ba60d74/go.mod h1:uEvGFxwbEdylLd0r3eJgrWw3K0/UJr5DelrNLGKv2Uw=
-github.com/RussellLuo/structs v1.1.1-0.20210815142559-1bf2c99a30cc h1:bXyHluYvoU/t5fh/kb9sT8KIyKR9hqWrxWNccU05Aeg=
-github.com/RussellLuo/structs v1.1.1-0.20210815142559-1bf2c99a30cc/go.mod h1:qas+tRT21XKo0VNnwq/SrsnvG3axjhWbeyKFgb7v20M=
+github.com/RussellLuo/structs v1.1.1-0.20210913082119-37905e9baec1 h1:0IHTM3przdglhLJ4057ilob2eqitzd6Fc8lieKzVXw0=
+github.com/RussellLuo/structs v1.1.1-0.20210913082119-37905e9baec1/go.mod h1:qas+tRT21XKo0VNnwq/SrsnvG3axjhWbeyKFgb7v20M=
 github.com/RussellLuo/validating/v2 v2.1.1/go.mod h1:FCrcxiiCo8FXMbKoALpXAHkGXZoVh5pWVboC+GVruiI=
 github.com/Shopify/sarama v1.19.0/go.mod h1:FVkBWblsNy7DGZRfXLU0O9RCGt5g3g3yEuWXgklEdEo=
 github.com/Shopify/toxiproxy v2.1.4+incompatible/go.mod h1:OXgGpZ6Cli1/URJOF1DMxUHB2q5Ap20/P/eIdh4G0pI=

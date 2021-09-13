@@ -71,8 +71,10 @@ func (dc *DefaultCodec) stringToTimeHookFunc(from, to reflect.Value) (interface{
 	return from.Interface(), nil
 }
 
-func (dc *DefaultCodec) errOrTimeToStringHookFunc(typ reflect.Type, in interface{}) (interface{}, error) {
-	if typ.Implements(errorInterface) {
+func (dc *DefaultCodec) errOrTimeToStringHookFunc(value reflect.Value) (interface{}, error) {
+	in := value.Interface()
+
+	if value.Type().Implements(errorInterface) {
 		if in == nil {
 			return "", nil
 		}
