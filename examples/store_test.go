@@ -14,8 +14,8 @@ import (
 )
 
 var (
-	testee   *builtin.Testee
-	instance store.Store
+	testee *builtin.Testee
+	sut    store.Store
 )
 
 func TestMain(m *testing.M) {
@@ -30,7 +30,7 @@ func TestMain(m *testing.M) {
 		fmt.Printf("err: %v\n", err)
 		os.Exit(1)
 	}
-	instance = testee.Instance.(store.Store)
+	sut = testee.SUT.(store.Store)
 
 	// os.Exit() does not respect deferred functions
 	code := m.Run()
@@ -101,7 +101,7 @@ func TestCreateUser(t *testing.T) {
 			}
 
 			var gotOut out
-			gotOut.Err = instance.CreateUser(in.User)
+			gotOut.Err = sut.CreateUser(in.User)
 
 			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
@@ -176,7 +176,7 @@ func TestGetUser(t *testing.T) {
 			}
 
 			var gotOut out
-			gotOut.User, gotOut.Err = instance.GetUser(in.Name)
+			gotOut.User, gotOut.Err = sut.GetUser(in.Name)
 
 			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
@@ -265,7 +265,7 @@ func TestUpdateUser(t *testing.T) {
 			}
 
 			var gotOut out
-			gotOut.Err = instance.UpdateUser(in.Name, in.User)
+			gotOut.Err = sut.UpdateUser(in.Name, in.User)
 
 			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
@@ -351,7 +351,7 @@ func TestDeleteUser(t *testing.T) {
 			}
 
 			var gotOut out
-			gotOut.Err = instance.DeleteUser(in.Name)
+			gotOut.Err = sut.DeleteUser(in.Name)
 
 			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {

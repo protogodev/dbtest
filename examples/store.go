@@ -122,7 +122,7 @@ func NewTestee(dsn string) (*builtin.Testee, error) {
 	}
 
 	return &builtin.Testee{
-		Instance: store,
-		DB:       sqldb.New(store.db),
+		SUT: store,
+		DB:  sqldb.New(store.db),
 	}, nil
 }

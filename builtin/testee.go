@@ -6,11 +6,11 @@ import (
 )
 
 type Testee struct {
-	// Instance is a testee instance, which must implements the
-	// corresponding interface.
-	Instance interface{}
-	DB       DB
-	Codec    Codec
+	// System under test (http://xunitpatterns.com/SUT.html),
+	// which must implement the corresponding interface.
+	SUT   interface{}
+	DB    DB
+	Codec Codec
 }
 
 func (t *Testee) Complete() *Testee {
@@ -24,8 +24,8 @@ func (t *Testee) Validate() error {
 	if t == nil {
 		return errors.New("t is nil")
 	}
-	if t.Instance == nil {
-		return errors.New("t.Instance is nil")
+	if t.SUT == nil {
+		return errors.New("t.SUT is nil")
 	}
 	if t.DB == nil {
 		return errors.New("t.DB is nil")

@@ -18,8 +18,8 @@ import (
 )
 
 var (
-	testee   *builtin.Testee
-	instance {{$.SrcPkgName}}.{{$.InterfaceName}}
+	testee *builtin.Testee
+	sut    {{$.SrcPkgName}}.{{$.InterfaceName}}
 )
 
 func TestMain(m *testing.M) {
@@ -34,7 +34,7 @@ func TestMain(m *testing.M) {
 		fmt.Printf("err: %v\n", err)
 		os.Exit(1)
 	}
-	instance = testee.Instance.({{$.SrcPkgName}}.{{$.InterfaceName}})
+	sut = testee.SUT.({{$.SrcPkgName}}.{{$.InterfaceName}})
 
 	// os.Exit() does not respect deferred functions
 	code := m.Run()
@@ -108,7 +108,7 @@ func Test{{.Name}}(t *testing.T) {
 			}
 
 			var gotOut out
-			{{fmtArgCSV $method.ReturnArgValueList "gotOut.>Name"}} = instance.{{.Name}}({{fmtArgCSV $method.CallArgList "in.>Name"}})
+			{{fmtArgCSV $method.ReturnArgValueList "gotOut.>Name"}} = sut.{{.Name}}({{fmtArgCSV $method.CallArgList "in.>Name"}})
 
 			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
