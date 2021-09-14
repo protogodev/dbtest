@@ -5,7 +5,7 @@ Database testing made easy in Go.
 
 ## Features
 
-1. Human-friendly
+1. Declarative
   
     Define the minimum test specification in a YAML-based DSL, then all tests can be generated automatically.
 
@@ -15,12 +15,13 @@ Database testing made easy in Go.
 
 3. Opinionated
   
-    - [The database is a detail][1], which means the database-related code always implements a Go interface.
+    - [The database is a detail][1], which means the database-related code should always implement a Go interface.
     - [Run database tests against a real database][2], instead of relying on mocks.
         + The limitation is that running tests in parallel is not supported.
     - Use the same [test fixture][3] for all subtests of the same [method under test][4].
     - Only [test the public methods][5], thus the generated tests are in a separate `_test` package.
-    - Prefer [table driven tests][6].
+    - Leverage [TestMain][6] to do global setup and teardown.
+    - Prefer [table driven tests][7].
 
 
 ## Installation
@@ -55,7 +56,7 @@ See [examples](examples).
 
 ## Documentation
 
-Check out the [Godoc][7].
+Check out the [Godoc][8].
 
 
 ## License
@@ -68,5 +69,6 @@ Check out the [Godoc][7].
 [3]: https://en.wikipedia.org/wiki/Test_fixture#Software
 [4]: http://xunitpatterns.com/SUT.html
 [5]: https://martinfowler.com/articles/practical-test-pyramid.html#WhatToTest
-[6]: https://github.com/golang/go/wiki/TableDrivenTests
-[7]: https://pkg.go.dev/github.com/RussellLuo/dbtest
+[6]: https://pkg.go.dev/testing#hdr-Main
+[7]: https://github.com/golang/go/wiki/TableDrivenTests
+[8]: https://pkg.go.dev/github.com/RussellLuo/dbtest
