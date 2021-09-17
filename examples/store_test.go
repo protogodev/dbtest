@@ -19,7 +19,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	t, err := store.NewTestee("root:123456@tcp(127.0.0.1:3306)/test")
+	t, err := store.NewTestee("root:root@tcp(127.0.0.1:3306)/test")
 	if err != nil {
 		fmt.Printf("err: %v\n", err)
 		os.Exit(1)

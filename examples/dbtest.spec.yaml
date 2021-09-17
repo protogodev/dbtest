@@ -1,7 +1,7 @@
 imports:
   - github.com/RussellLuo/dbtest/example
 
-testee: store.NewTestee("root:123456@tcp(127.0.0.1:3306)/test")
+testee: store.NewTestee("root:root@tcp(127.0.0.1:3306)/test")
 
 tests:
   - name: CreateUser

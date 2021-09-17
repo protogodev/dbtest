@@ -1,0 +1,49 @@
+name: CI
+on: [push,pull_request]
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Check out code
+      uses: actions/checkout@v1
+
+    - name: Intsall GolangCI-Lint
+      run: curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b . latest
+
+    - name: Run lint
+      run: ./golangci-lint run ./... --skip-dirs benchmarks
+
+  test:
+    name: Unit Testing
+    runs-on: ubuntu-20.04  # Has installed MySQL 8 by default.
+    steps:
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Check out code
+      uses: actions/checkout@v1
+
+    - name: Set up MySQL 8.0
+      run: |
+        echo -e "Starting MySQL service, it is off by default\n"
+        sudo systemctl enable mysql.service
+        sudo systemctl start mysql.service
+
+        echo -e "Creating MySQL tables\n"
+        mysql -uroot -proot -e 'source ./examples/user.sql'
+
+    - name: Get dependencies
+      run: go get -v -t -d ./...
+
+    - name: Run tests
+      run: go test -v -race ./...
