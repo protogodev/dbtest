@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/RussellLuo/kok/gen/util/generator"
+	"github.com/RussellLuo/kok/gen/util/reflector"
 	"github.com/RussellLuo/kok/pkg/ifacetool"
 	"github.com/RussellLuo/kok/pkg/ifacetool/moq"
 
@@ -18,7 +19,7 @@ import (
 )
 
 type Options struct {
-	OutFilename      string
+	OutFileName      string
 	Formatted        bool
 	TestSpecFileName string
 	TemplateFileName string
@@ -34,7 +35,7 @@ func main() {
 	var flags userFlags
 	flag.StringVar(&flags.TestSpecFileName, "spec", "./dbtest.spec.yaml", "the test specification in YAML")
 	flag.StringVar(&flags.TemplateFileName, "tmpl", "", "the template to render (default to builtin template)")
-	flag.StringVar(&flags.OutFilename, "out", "", `output filename (default "./<srcPkgName>_test.go")`)
+	flag.StringVar(&flags.OutFileName, "out", "", `output filename (default "./<srcPkgName>_test.go")`)
 	flag.BoolVar(&flags.Formatted, "fmt", true, "whether to make the test code formatted")
 
 	flag.Usage = func() {
@@ -78,8 +79,8 @@ func run(flags userFlags) error {
 		return err
 	}
 
-	if flags.Options.OutFilename == "" {
-		flags.Options.OutFilename = fmt.Sprintf("./%s_test.go", data.SrcPkgName)
+	if flags.Options.OutFileName == "" {
+		flags.Options.OutFileName = fmt.Sprintf("./%s_test.go", data.SrcPkgName)
 	}
 
 	file, err := generate(&flags.Options, data)
@@ -106,12 +107,14 @@ func generate(opts *Options, ifaceData *ifacetool.Data) (*generator.File, error)
 	}
 
 	data := struct {
+		DstPkgName    string
 		SrcPkgName    string
 		InterfaceName string
 		Imports       []spec.Import
 		Testee        string
 		Tests         []spec.Test
 	}{
+		DstPkgName:    reflector.PkgNameFromDir(filepath.Dir(opts.OutFileName)),
 		SrcPkgName:    ifaceData.SrcPkgName,
 		InterfaceName: ifaceData.InterfaceName,
 		Imports:       imports,
@@ -160,7 +163,7 @@ func generate(opts *Options, ifaceData *ifacetool.Data) (*generator.File, error)
 			},
 		},
 		Formatted:      opts.Formatted,
-		TargetFileName: opts.OutFilename,
+		TargetFileName: opts.OutFileName,
 	})
 }
 
