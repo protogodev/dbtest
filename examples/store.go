@@ -41,8 +41,9 @@ func NewDBStore(dsn string) (*DBStore, error) {
 	cfg.ParseTime = true
 	cfg.Loc = time.UTC
 	if cfg.Params == nil {
-		cfg.Params = map[string]string{"time_zone": "'+00:00'"}
+		cfg.Params = make(map[string]string)
 	}
+	cfg.Params["time_zone"] = "'+00:00'"
 
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
@@ -90,8 +91,7 @@ func (s *DBStore) GetUser(name string) (*User, error) {
 		}
 	}
 
-	err = rows.Err()
-	if err != nil {
+	if err = rows.Err(); err != nil {
 		return nil, err
 	}
 

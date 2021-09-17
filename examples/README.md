@@ -7,7 +7,7 @@ This example illustrates how to apply declarative testing for a typical database
 
 1. Prepare the database
 
-   Execute the SQL [user.sql](user.sql):
+   Execute the SQLs in [user.sql](user.sql):
    
     ```bash
     $ mysql -uroot -p -e 'source ./user.sql'
@@ -15,7 +15,7 @@ This example illustrates how to apply declarative testing for a typical database
 
 2. Implement the testee factory
 
-   See [NewTestee()](store.go#L117-L133).
+   See [NewTestee()](store.go#L117-L128).
 
 3. Write the test specification
 
