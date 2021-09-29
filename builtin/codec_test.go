@@ -50,7 +50,7 @@ func TestDefaultCodec_Decode(t *testing.T) {
 		Time:  date,
 	}
 
-	codec := &builtin.DefaultCodec{TimeFormat: time.RFC3339}
+	codec := builtin.DefaultCodec(time.RFC3339)
 	var got Out
 	if err := codec.Decode(in, &got); err != nil {
 		t.Fatalf("Err: %v\n", err)
@@ -104,7 +104,7 @@ func TestDefaultCodec_Encode(t *testing.T) {
 		"err":  "oops",
 	}
 
-	codec := &builtin.DefaultCodec{TimeFormat: time.RFC3339}
+	codec := builtin.DefaultCodec(time.RFC3339)
 	got, err := codec.Encode(in)
 	if err != nil {
 		t.Fatalf("Err: %v\n", err)

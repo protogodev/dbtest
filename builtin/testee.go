@@ -15,7 +15,7 @@ type Testee struct {
 
 func (t *Testee) Complete() *Testee {
 	if t.Codec == nil {
-		t.Codec = &DefaultCodec{TimeFormat: time.RFC3339}
+		t.Codec = DefaultCodec(time.RFC3339)
 	}
 	return t
 }
