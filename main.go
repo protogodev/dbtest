@@ -9,10 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/RussellLuo/kok/gen/util/generator"
-	"github.com/RussellLuo/kok/gen/util/reflector"
-	"github.com/RussellLuo/kok/pkg/ifacetool"
-	"github.com/RussellLuo/kok/pkg/ifacetool/moq"
+	"github.com/RussellLuo/kun/gen/util/generator"
+	"github.com/RussellLuo/kun/pkg/ifacetool"
+	"github.com/RussellLuo/kun/pkg/pkgtool"
 
 	"github.com/RussellLuo/dbtest/builtin"
 	"github.com/RussellLuo/dbtest/spec"
@@ -65,16 +64,9 @@ func run(flags userFlags) error {
 		return err
 	}
 
-	moqParser, err := moq.New(moq.Config{
-		SrcDir: filepath.Dir(srcFilename),
-		// Non-empty pkgName makes all type names used in the interface full-qualified.
-		PkgName: "x",
-	})
-	if err != nil {
-		return err
-	}
-
-	data, err := moqParser.Parse(interfaceName)
+	// Non-empty pkgName makes all type names used in the interface full-qualified.
+	pkgName := "x"
+	data, err := pkgtool.ParseInterface(pkgName, srcFilename, interfaceName)
 	if err != nil {
 		return err
 	}
@@ -114,7 +106,7 @@ func generate(opts *Options, ifaceData *ifacetool.Data) (*generator.File, error)
 		Testee        string
 		Tests         []spec.Test
 	}{
-		DstPkgName:    reflector.PkgNameFromDir(filepath.Dir(opts.OutFileName)),
+		DstPkgName:    pkgtool.PkgNameFromDir(filepath.Dir(opts.OutFileName)),
 		SrcPkgName:    ifaceData.SrcPkgName,
 		InterfaceName: ifaceData.InterfaceName,
 		Imports:       imports,
