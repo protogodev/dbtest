@@ -5,8 +5,8 @@ import (
 )
 
 type Codec interface {
-	Decode(in map[string]interface{}, out interface{}) (err error)
-	Encode(in interface{}) (out map[string]interface{}, err error)
+	Decode(in interface{}, out interface{}) (err error)
+	Encode(in interface{}) (out interface{}, err error)
 }
 
 func DefaultCodec(layout string) Codec {

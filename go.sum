@@ -6,8 +6,8 @@ github.com/RussellLuo/appx v0.0.0-20210610081121-2d2842cc1993/go.mod h1:BYiSO63u
 github.com/RussellLuo/kun v0.4.1-0.20211210014710-e3df1d12e5ab h1:/AvpP9RaMk49KDixyf/3+Jfnhb3mt4fBfn6SDOJ2gaQ=
 github.com/RussellLuo/kun v0.4.1-0.20211210014710-e3df1d12e5ab/go.mod h1:3OPtQBSurhHY9uyp01FdTAUr88sS5pmMLkaxRHhKssw=
 github.com/RussellLuo/micron v0.0.0-20200517141348-ec849ba60d74/go.mod h1:uEvGFxwbEdylLd0r3eJgrWw3K0/UJr5DelrNLGKv2Uw=
-github.com/RussellLuo/structool v0.0.0-20210929111347-c6b72adb047e h1:HF3gbzie6LfOj4iBPRAA5ogGs7N7aIowZ4e9WN1Ghnw=
-github.com/RussellLuo/structool v0.0.0-20210929111347-c6b72adb047e/go.mod h1:GLjRAdlR4O5vqyrjRk75pd3FJ6z+BGxLsZ1MU6KSkew=
+github.com/RussellLuo/structool v0.0.0-20211024113711-6eda5ab65abf h1:dj2WMvZu9+846HVJ8e7TqtfCVue1C5jUtPxKbZageGY=
+github.com/RussellLuo/structool v0.0.0-20211024113711-6eda5ab65abf/go.mod h1:GLjRAdlR4O5vqyrjRk75pd3FJ6z+BGxLsZ1MU6KSkew=
 github.com/RussellLuo/structs v1.2.0 h1:rLR+opKsDCfDUwHCYG2mvFi1xUvYcWSt9kwns4e8OkU=
 github.com/RussellLuo/structs v1.2.0/go.mod h1:qas+tRT21XKo0VNnwq/SrsnvG3axjhWbeyKFgb7v20M=
 github.com/RussellLuo/validating/v2 v2.1.1/go.mod h1:FCrcxiiCo8FXMbKoALpXAHkGXZoVh5pWVboC+GVruiI=
