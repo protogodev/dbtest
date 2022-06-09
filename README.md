@@ -26,24 +26,30 @@ Database testing made easy in Go.
 
 ## Installation
 
+Make a custom build of [protogo](https://github.com/protogodev/protogo):
+
 ```bash
-$ go get -u github.com/protogodev/dbtest
+$ protogo build --plugin=github.com/protogodev/dbtest
 ```
 
 <details open>
   <summary> Usage </summary>
 
 ```bash
-$ dbtest -h
-dbtest [flags] source-file interface-name
-  -fmt
-        whether to make the test code formatted (default true)
-  -out string
-        output filename (default "./<srcPkgName>_test.go")
-  -spec string
-        the test specification in YAML (default "./dbtest.spec.yaml")
-  -tmpl string
-        the template to render (default to builtin template)
+$ protogo dbtest -h
+Usage: protogo dbtest <source-file> <interface-name>
+
+Arguments:
+  <source-file>       source-file
+  <interface-name>    interface-name
+
+Flags:
+  -h, --help                         Show context-sensitive help.
+
+      --out=STRING                   output filename (default "./<srcPkgName>_test.go")
+      --fmt                          whether to make the test code formatted
+      --spec="./dbtest.spec.yaml"    the test specification in YAML
+      --tmpl=STRING                  the template to render (default to builtin template)
 ```
 
 </details>

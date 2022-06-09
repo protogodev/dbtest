@@ -10,7 +10,7 @@ import (
 	sqldb "github.com/protogodev/dbtest/builtin/sql"
 )
 
-//go:generate dbtest ./store.go Store
+//go:generate protogo dbtest ./store.go Store
 
 type User struct {
 	ID    int `dbtest:"-"`
