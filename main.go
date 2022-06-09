@@ -13,8 +13,8 @@ import (
 	"github.com/RussellLuo/kun/pkg/ifacetool"
 	"github.com/RussellLuo/kun/pkg/pkgtool"
 
-	"github.com/RussellLuo/dbtest/builtin"
-	"github.com/RussellLuo/dbtest/spec"
+	"github.com/protogodev/dbtest/builtin"
+	"github.com/protogodev/dbtest/spec"
 )
 
 type Options struct {

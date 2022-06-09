@@ -1,4 +1,4 @@
-module github.com/RussellLuo/dbtest
+module github.com/protogodev/dbtest
 
 go 1.14
 

@@ -3,7 +3,7 @@ package builtin
 import (
 	"testing"
 
-	"github.com/RussellLuo/dbtest/spec"
+	"github.com/protogodev/dbtest/spec"
 )
 
 type DB interface {

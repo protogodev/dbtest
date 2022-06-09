@@ -6,8 +6,8 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 
-	"github.com/RussellLuo/dbtest/builtin"
-	sqldb "github.com/RussellLuo/dbtest/builtin/sql"
+	"github.com/protogodev/dbtest/builtin"
+	sqldb "github.com/protogodev/dbtest/builtin/sql"
 )
 
 //go:generate dbtest ./store.go Store

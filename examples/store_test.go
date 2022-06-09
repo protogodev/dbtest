@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/RussellLuo/dbtest/builtin"
-	store "github.com/RussellLuo/dbtest/examples"
-	"github.com/RussellLuo/dbtest/spec"
+	"github.com/protogodev/dbtest/builtin"
+	store "github.com/protogodev/dbtest/examples"
+	"github.com/protogodev/dbtest/spec"
 )
 
 var (

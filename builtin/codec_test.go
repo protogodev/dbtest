@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/RussellLuo/dbtest/builtin"
+	"github.com/protogodev/dbtest/builtin"
 )
 
 func TestDefaultCodec_Decode(t *testing.T) {

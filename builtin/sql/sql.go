@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/RussellLuo/dbtest/spec"
+	"github.com/protogodev/dbtest/spec"
 )
 
 type DB struct {

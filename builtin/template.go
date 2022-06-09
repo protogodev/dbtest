@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"testing"
 	"time"
-	"github.com/RussellLuo/dbtest/builtin"
-	"github.com/RussellLuo/dbtest/spec"
+	"github.com/protogodev/dbtest/builtin"
+	"github.com/protogodev/dbtest/spec"
 
 	{{- range $.Imports}}
 	{{.ImportString}}
