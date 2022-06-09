@@ -27,7 +27,7 @@ Database testing made easy in Go.
 ## Installation
 
 ```bash
-$ go get -u github.com/RussellLuo/dbtest
+$ go get -u github.com/protogodev/dbtest
 ```
 
 <details open>
@@ -71,4 +71,4 @@ Check out the [Godoc][8].
 [5]: https://martinfowler.com/articles/practical-test-pyramid.html#WhatToTest
 [6]: https://pkg.go.dev/testing#hdr-Main
 [7]: https://github.com/golang/go/wiki/TableDrivenTests
-[8]: https://pkg.go.dev/github.com/RussellLuo/dbtest
+[8]: https://pkg.go.dev/github.com/protogodev/dbtest
