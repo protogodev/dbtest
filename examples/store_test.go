@@ -66,7 +66,7 @@ func TestCreateUser(t *testing.T) {
 	}{
 		{
 			name:    "new user",
-			in:      map[string]interface{}{"user": map[interface{}]interface{}{"Age": 12, "Birth": "2021-08-12T00:00:00Z", "Name": "bar", "Sex": "f"}},
+			in:      map[string]interface{}{"user": map[interface{}]interface{}{"age": 12, "birth": "2021-08-12T00:00:00Z", "name": "bar", "sex": "f"}},
 			wantOut: map[string]interface{}{"err": ""},
 			wantData: []spec.DataAssertion{
 				{
@@ -80,7 +80,7 @@ func TestCreateUser(t *testing.T) {
 		},
 		{
 			name:    "duplicate user",
-			in:      map[string]interface{}{"user": map[interface{}]interface{}{"Age": 10, "Birth": "2021-08-10T00:00:00Z", "Name": "foo", "Sex": "m"}},
+			in:      map[string]interface{}{"user": map[interface{}]interface{}{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"}},
 			wantOut: map[string]interface{}{"err": "Error 1062: Duplicate entry 'foo' for key 'user.idx_name'"},
 			wantData: []spec.DataAssertion{
 				{
@@ -97,7 +97,7 @@ func TestCreateUser(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var in in
 			if err := testee.Codec.Decode(tt.in, &in); err != nil {
-				t.Fatalf("err when decoding In: %v", err)
+				t.Errorf("err when decoding In: %v", err)
 			}
 
 			var gotOut out
@@ -105,18 +105,18 @@ func TestCreateUser(t *testing.T) {
 
 			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
-				t.Fatalf("err when encoding Out: %v", err)
+				t.Errorf("err when encoding Out: %v", err)
 			}
 
 			// Using "%+v" instead of "%#v" as a workaround for https://github.com/go-yaml/yaml/issues/139.
 			if fmt.Sprintf("%+v", encodedOut) != fmt.Sprintf("%+v", tt.wantOut) {
-				t.Fatalf("Out: Got (%+v) != Want (%+v)", encodedOut, tt.wantOut)
+				t.Errorf("Out: Got (%+v) != Want (%+v)", encodedOut, tt.wantOut)
 			}
 
 			for _, want := range tt.wantData {
 				gotResult := f.Query(want.Query)
 				if !gotResult.Equal(want.Result) {
-					t.Fatalf("Result: Got (%#v) != Want (%#v)", gotResult, want.Result)
+					t.Errorf("Result: Got (%#v) != Want (%#v)", gotResult, want.Result)
 				}
 			}
 
@@ -157,7 +157,7 @@ func TestGetUser(t *testing.T) {
 		{
 			name:     "ok",
 			in:       map[string]interface{}{"name": "foo"},
-			wantOut:  map[string]interface{}{"err": "", "user": map[interface{}]interface{}{"Age": 10, "Birth": "2021-08-10T00:00:00Z", "Name": "foo", "Sex": "m"}},
+			wantOut:  map[string]interface{}{"err": "", "user": map[interface{}]interface{}{"age": 10, "birth": "2021-08-10T00:00:00Z", "name": "foo", "sex": "m"}},
 			wantData: []spec.DataAssertion{},
 		},
 		{
@@ -172,7 +172,7 @@ func TestGetUser(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var in in
 			if err := testee.Codec.Decode(tt.in, &in); err != nil {
-				t.Fatalf("err when decoding In: %v", err)
+				t.Errorf("err when decoding In: %v", err)
 			}
 
 			var gotOut out
@@ -180,18 +180,18 @@ func TestGetUser(t *testing.T) {
 
 			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
-				t.Fatalf("err when encoding Out: %v", err)
+				t.Errorf("err when encoding Out: %v", err)
 			}
 
 			// Using "%+v" instead of "%#v" as a workaround for https://github.com/go-yaml/yaml/issues/139.
 			if fmt.Sprintf("%+v", encodedOut) != fmt.Sprintf("%+v", tt.wantOut) {
-				t.Fatalf("Out: Got (%+v) != Want (%+v)", encodedOut, tt.wantOut)
+				t.Errorf("Out: Got (%+v) != Want (%+v)", encodedOut, tt.wantOut)
 			}
 
 			for _, want := range tt.wantData {
 				gotResult := f.Query(want.Query)
 				if !gotResult.Equal(want.Result) {
-					t.Fatalf("Result: Got (%#v) != Want (%#v)", gotResult, want.Result)
+					t.Errorf("Result: Got (%#v) != Want (%#v)", gotResult, want.Result)
 				}
 			}
 
@@ -231,7 +231,7 @@ func TestUpdateUser(t *testing.T) {
 	}{
 		{
 			name:    "ok",
-			in:      map[string]interface{}{"name": "foo", "user": map[interface{}]interface{}{"Age": 11, "Birth": "2021-08-11T00:00:00Z", "Sex": "m"}},
+			in:      map[string]interface{}{"name": "foo", "user": map[interface{}]interface{}{"age": 11, "birth": "2021-08-11T00:00:00Z", "sex": "m"}},
 			wantOut: map[string]interface{}{"err": ""},
 			wantData: []spec.DataAssertion{
 				{
@@ -244,7 +244,7 @@ func TestUpdateUser(t *testing.T) {
 		},
 		{
 			name:    "not found",
-			in:      map[string]interface{}{"name": "bar", "user": map[interface{}]interface{}{"Age": 11, "Birth": "2021-08-11T00:00:00Z", "Sex": "m"}},
+			in:      map[string]interface{}{"name": "bar", "user": map[interface{}]interface{}{"age": 11, "birth": "2021-08-11T00:00:00Z", "sex": "m"}},
 			wantOut: map[string]interface{}{"err": ""},
 			wantData: []spec.DataAssertion{
 				{
@@ -261,7 +261,7 @@ func TestUpdateUser(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var in in
 			if err := testee.Codec.Decode(tt.in, &in); err != nil {
-				t.Fatalf("err when decoding In: %v", err)
+				t.Errorf("err when decoding In: %v", err)
 			}
 
 			var gotOut out
@@ -269,18 +269,18 @@ func TestUpdateUser(t *testing.T) {
 
 			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
-				t.Fatalf("err when encoding Out: %v", err)
+				t.Errorf("err when encoding Out: %v", err)
 			}
 
 			// Using "%+v" instead of "%#v" as a workaround for https://github.com/go-yaml/yaml/issues/139.
 			if fmt.Sprintf("%+v", encodedOut) != fmt.Sprintf("%+v", tt.wantOut) {
-				t.Fatalf("Out: Got (%+v) != Want (%+v)", encodedOut, tt.wantOut)
+				t.Errorf("Out: Got (%+v) != Want (%+v)", encodedOut, tt.wantOut)
 			}
 
 			for _, want := range tt.wantData {
 				gotResult := f.Query(want.Query)
 				if !gotResult.Equal(want.Result) {
-					t.Fatalf("Result: Got (%#v) != Want (%#v)", gotResult, want.Result)
+					t.Errorf("Result: Got (%#v) != Want (%#v)", gotResult, want.Result)
 				}
 			}
 
@@ -347,7 +347,7 @@ func TestDeleteUser(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var in in
 			if err := testee.Codec.Decode(tt.in, &in); err != nil {
-				t.Fatalf("err when decoding In: %v", err)
+				t.Errorf("err when decoding In: %v", err)
 			}
 
 			var gotOut out
@@ -355,18 +355,18 @@ func TestDeleteUser(t *testing.T) {
 
 			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
-				t.Fatalf("err when encoding Out: %v", err)
+				t.Errorf("err when encoding Out: %v", err)
 			}
 
 			// Using "%+v" instead of "%#v" as a workaround for https://github.com/go-yaml/yaml/issues/139.
 			if fmt.Sprintf("%+v", encodedOut) != fmt.Sprintf("%+v", tt.wantOut) {
-				t.Fatalf("Out: Got (%+v) != Want (%+v)", encodedOut, tt.wantOut)
+				t.Errorf("Out: Got (%+v) != Want (%+v)", encodedOut, tt.wantOut)
 			}
 
 			for _, want := range tt.wantData {
 				gotResult := f.Query(want.Query)
 				if !gotResult.Equal(want.Result) {
-					t.Fatalf("Result: Got (%#v) != Want (%#v)", gotResult, want.Result)
+					t.Errorf("Result: Got (%#v) != Want (%#v)", gotResult, want.Result)
 				}
 			}
 

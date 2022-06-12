@@ -1,112 +1,94 @@
 imports:
-  - github.com/RussellLuo/dbtest/example
+- github.com/RussellLuo/dbtest/example
 
 testee: store.NewTestee("root:root@tcp(127.0.0.1:3306)/test")
 
 tests:
-  - name: CreateUser
-    fixture:
-      user:
-        - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
-    subtests:
-      - name: new user
-        in:
-          user:
-            Name: bar
-            Sex: f
-            Age: 12
-            Birth: 2021-08-12T00:00:00Z
-        wantOut:
-          err: ''
-        wantData:
-          - query: SELECT name, sex, age, birth FROM user
-            result:
-              - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
-              - {name: bar, sex: f, age: 12, birth: 2021-08-12T00:00:00Z}
-      - name: duplicate user
-        in:
-          user:
-            Name: foo
-            Sex: m
-            Age: 10
-            Birth: 2021-08-10T00:00:00Z
-        wantOut:
-          err: "Error 1062: Duplicate entry 'foo' for key 'user.idx_name'"
-        wantData:
-          - query: SELECT name, sex, age, birth FROM user
-            result:
-              - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
-  - name: GetUser
-    fixture:
-      user:
-        - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
-    subtests:
-      - name: ok
-        in:
-          name: foo
-        wantOut:
-          user:
-            Name: foo
-            Sex: m
-            Age: 10
-            Birth: 2021-08-10T00:00:00Z
-          err: ''
-      - name: not found
-        in:
-          name: bar
-        wantOut:
-          user: null
-          err: ''
-  - name: UpdateUser
-    fixture:
-      user:
-        - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
-    subtests:
-      - name: ok
-        in:
-          name: foo
-          user:
-            Sex: m
-            Age: 11
-            Birth: 2021-08-11T00:00:00Z
-        wantOut:
-          err: ''
-        wantData:
-          - query: SELECT name, sex, age, birth FROM user
-            result:
-              - {name: foo, sex: m, age: 11, birth: 2021-08-11T00:00:00Z}
-      - name: not found
-        in:
-          name: bar
-          user:
-            Sex: m
-            Age: 11
-            Birth: 2021-08-11T00:00:00Z
-        wantOut:
-          err: ''
-        wantData:
-          - query: SELECT name, sex, age, birth FROM user
-            result:
-              - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
-  - name: DeleteUser
-    fixture:
-      user:
-        - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
-    subtests:
-      - name: ok
-        in:
-          name: foo
-        wantOut:
-          err: ''
-        wantData:
-          - query: SELECT name, sex, age, birth FROM user
-            result: []
-      - name: not found
-        in:
-          name: bar
-        wantOut:
-          err: ''
-        wantData:
-          - query: SELECT name, sex, age, birth FROM user
-            result:
-              - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
+- name: CreateUser
+  fixture:
+    user:
+    - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
+  subtests:
+  - name: new user
+    in:
+      user: {name: bar, sex: f, age: 12, birth: 2021-08-12T00:00:00Z}
+    wantOut:
+      err: ''
+    wantData:
+    - query: SELECT name, sex, age, birth FROM user
+      result:
+      - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
+      - {name: bar, sex: f, age: 12, birth: 2021-08-12T00:00:00Z}
+  - name: duplicate user
+    in:
+      user: {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
+    wantOut:
+      err: "Error 1062: Duplicate entry 'foo' for key 'user.idx_name'"
+    wantData:
+    - query: SELECT name, sex, age, birth FROM user
+      result:
+      - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
+- name: GetUser
+  fixture:
+    user:
+    - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
+  subtests:
+  - name: ok
+    in:
+      name: foo
+    wantOut:
+      user: {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
+      err: ''
+  - name: not found
+    in:
+      name: bar
+    wantOut:
+      user: null
+      err: ''
+- name: UpdateUser
+  fixture:
+    user:
+    - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
+  subtests:
+  - name: ok
+    in:
+      name: foo
+      user: {sex: m, age: 11, birth: 2021-08-11T00:00:00Z}
+    wantOut:
+      err: ''
+    wantData:
+    - query: SELECT name, sex, age, birth FROM user
+      result:
+      - {name: foo, sex: m, age: 11, birth: 2021-08-11T00:00:00Z}
+  - name: not found
+    in:
+      name: bar
+      user: {sex: m, age: 11, birth: 2021-08-11T00:00:00Z}
+    wantOut:
+      err: ''
+    wantData:
+    - query: SELECT name, sex, age, birth FROM user
+      result:
+      - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
+- name: DeleteUser
+  fixture:
+    user:
+    - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}
+  subtests:
+  - name: ok
+    in:
+      name: foo
+    wantOut:
+      err: ''
+    wantData:
+    - query: SELECT name, sex, age, birth FROM user
+      result: []
+  - name: not found
+    in:
+      name: bar
+    wantOut:
+      err: ''
+    wantData:
+    - query: SELECT name, sex, age, birth FROM user
+      result:
+      - {name: foo, sex: m, age: 10, birth: 2021-08-10T00:00:00Z}

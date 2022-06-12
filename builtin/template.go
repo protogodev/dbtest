@@ -104,7 +104,7 @@ func Test{{.Name}}(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			var in in
 			if err := testee.Codec.Decode(tt.in, &in); err != nil {
-				t.Fatalf("err when decoding In: %v", err)
+				t.Errorf("err when decoding In: %v", err)
 			}
 
 			var gotOut out
@@ -112,18 +112,18 @@ func Test{{.Name}}(t *testing.T) {
 
 			encodedOut, err := testee.Codec.Encode(gotOut)
 			if err != nil {
-				t.Fatalf("err when encoding Out: %v", err)
+				t.Errorf("err when encoding Out: %v", err)
 			}
 
 			// Using "%+v" instead of "%#v" as a workaround for https://github.com/go-yaml/yaml/issues/139.
 			if fmt.Sprintf("%+v", encodedOut) != fmt.Sprintf("%+v", tt.wantOut) {
-				t.Fatalf("Out: Got (%+v) != Want (%+v)", encodedOut, tt.wantOut)
+				t.Errorf("Out: Got (%+v) != Want (%+v)", encodedOut, tt.wantOut)
 			}
 
 			for _, want := range tt.wantData {
 				gotResult := f.Query(want.Query)
 				if !gotResult.Equal(want.Result) {
-					t.Fatalf("Result: Got (%#v) != Want (%#v)", gotResult, want.Result)
+					t.Errorf("Result: Got (%#v) != Want (%#v)", gotResult, want.Result)
 				}
 			}
 

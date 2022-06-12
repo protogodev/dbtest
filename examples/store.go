@@ -13,11 +13,11 @@ import (
 //go:generate protogo dbtest ./store.go Store
 
 type User struct {
-	ID    int `dbtest:"-"`
-	Name  string
-	Sex   string
-	Age   int
-	Birth time.Time
+	ID    int       `dbtest:"-"`
+	Name  string    `dbtest:"name,omitempty"`
+	Sex   string    `dbtest:"sex,omitempty"`
+	Age   int       `dbtest:"age,omitempty"`
+	Birth time.Time `dbtest:"birth,omitempty"`
 }
 
 type Store interface {
