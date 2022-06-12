@@ -32,6 +32,12 @@ Make a custom build of [protogo](https://github.com/protogodev/protogo):
 $ protogo build --plugin=github.com/protogodev/dbtest
 ```
 
+Or build from a local fork:
+
+```bash
+$ protogo build --plugin=github.com/protogodev/dbtest=../my-fork
+```
+
 <details open>
   <summary> Usage </summary>
 
