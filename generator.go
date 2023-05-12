@@ -28,6 +28,12 @@ type Generator struct {
 	TemplateFileName string `name:"tmpl" help:"the template to render (default to builtin template)"`
 }
 
+func (g *Generator) PkgName() string {
+	// FIXME: We ought to use the correct package name (i.e. the commented one).
+	return "x"
+	//return parser.PkgNameFromDir(filepath.Dir(g.OutFileName)) + "_test"
+}
+
 func (g *Generator) Generate(data *ifacetool.Data) (*generator.File, error) {
 	if g.OutFileName == "" {
 		g.OutFileName = fmt.Sprintf("./%s_test.go", data.SrcPkgName)
